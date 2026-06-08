@@ -1,0 +1,153 @@
+---
+import "../styles/body.css";
+import "../styles/fonts.css";
+import Navbar from "../components/navbar.astro";
+import Panel from "../components/panel.astro";
+import Buy from "../components/buy.astro";
+import "../styles/app.css";
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>quick</title>
+	</head>
+	<body>
+		<div class="bg"></div>
+		<!-- navbar component -->
+		<Navbar />
+		<div class="app">
+			<div class="slider">
+				<Panel />
+				<Buy />
+			</div>
+		</div>
+	</body>
+
+	<script>
+  	const slider = document.querySelector(".slider");
+ 	const priceBoxes = document.querySelectorAll(".price-box");
+
+  	if (slider) {
+    	priceBoxes.forEach(box => {
+      		box.addEventListener("click", () => {
+        		slider.classList.add("to-buy");
+      		});
+    	});
+ 	}
+	</script>
+
+	<script>
+  	const bg = document.querySelector(".bg");
+
+  	if (bg) {
+    	bg.textContent = Array(500)
+      	.fill("quick ")
+      	.join("");
+ 	}
+	</script>
+
+	<script>
+		const priceBoxes = document.querySelectorAll(".price-box") as NodeListOf<HTMLElement>;
+
+		const formTitle = document.getElementById("form-title");
+		const quantityInput = document.getElementById("quantity") as HTMLInputElement;
+		const totalInput = document.getElementById("total") as HTMLInputElement;
+
+		if (!formTitle || !quantityInput || !totalInput) {
+  			throw new Error("Missing elements in DOM");
+		}
+
+		window.selectedProduct = {
+			name: "",
+			price: 0
+		};
+
+		priceBoxes.forEach(box => {
+			box.addEventListener("click", () => {
+				const name = box.dataset.product || "";
+				const price = parseFloat(box.dataset.price || "0");
+
+				window.selectedProduct = { name, price };
+
+				formTitle.textContent = "Finaliza tu compra";
+
+				quantityInput.value = "1";
+
+				updateTotal();
+			});
+		});
+
+		function updateTotal() {
+		const qty = parseInt(quantityInput.value || "1");
+
+		const product = window.selectedProduct;
+
+		const total = (qty * product.price).toFixed(2);
+
+		totalInput.value = `PEN ${total}`;
+		}
+
+		quantityInput.addEventListener("input", updateTotal);
+	</script>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", () => {
+			const form = document.getElementById("buy-form") as HTMLFormElement | null;
+			const quantityInput = document.getElementById("quantity") as HTMLInputElement | null;
+
+			if (!form || !quantityInput) {
+				console.error("Form o inputs no encontrados");
+				return;
+			}
+
+  			form.addEventListener("submit", (e) => {
+    			e.preventDefault();
+
+    			const selectedProduct = (window as any).selectedProduct;
+
+    			if (!selectedProduct.name) {
+      				alert("Selecciona un producto");
+     				return;
+    			}
+
+				const nameInput = form.querySelector('input[type="text"]') as HTMLInputElement;
+				const locationSelect = form.querySelectorAll("select")[0] as HTMLSelectElement;
+				const paymentSelect = form.querySelectorAll("select")[1] as HTMLSelectElement;
+				const phoneInput = form.querySelector('input[type="tel"]') as HTMLInputElement;
+
+				const name = nameInput.value;
+				const location = locationSelect.value;
+				const quantity = Number(quantityInput.value);
+				const phone = phoneInput.value;
+				const payment = paymentSelect.value;
+
+				const total = (selectedProduct.price * quantity).toFixed(2);
+
+				const message = `
+Nuevo pedido:
+Producto: ${selectedProduct.name}
+Cantidad: ${quantity}
+Total: PEN ${total}
+Ubicación: ${location}
+Pago: ${payment}
+Cliente: ${name}
+Celular: ${phone}
+				`;
+
+    			const url = `https://wa.me/51912480767?text=${encodeURIComponent(message)}`;
+
+    			window.open(url, "_blank");
+
+				setTimeout(() => {
+					window.location.reload();
+				}, 500);
+  			});
+		});
+	</script>
+
+</html>

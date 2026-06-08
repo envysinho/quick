@@ -1,0 +1,26 @@
+.navbar {
+    width: 96%;
+    height: 70px;
+    background: #141428;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 32px;
+    margin: 13px auto 0 auto;
+}
+
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "fatkat", sans-serif;
+    font-size: 2.5rem;
+    color: #ffffff;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.logo:focus,
+.logo:active {
+    outline: none;
+}

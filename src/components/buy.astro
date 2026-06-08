@@ -1,0 +1,43 @@
+---
+import "../styles/buy.css";
+---
+
+<section class="form-section">
+
+  <form class="buy-form" id="buy-form">
+    <h2 id="form-title">Finaliza tu pedido</h2>
+
+    <input type="text" placeholder="Nombre" />
+
+    <select required>
+      <option value="" disabled selected>Selecciona tu ubicación</option>
+      <option>Aula 1</option>
+      <option>Aula 2</option>
+      <option>Aula 3</option>
+      <option>Aula 4</option>
+      <option>Aula 5</option>
+      <option>Aula 6</option>
+      <option>Aula 7</option>
+      <option>Aula 8</option>
+      <option>Laboratorio 1</option>
+      <option>Laboratorio 2</option>
+      <option>Laboratorio 3</option>
+      <option>Laboratorio 4</option>
+    </select>
+
+    <input type="number" id="quantity" placeholder="Ingresa una cantidad" value="1" min="1" />
+
+    <select required>
+      <option value="" disabled selected>Método de pago</option>
+      <option>Yape</option>
+      <option>Efectivo</option>
+    </select>
+
+    <input type="text" id="total" disabled />
+
+    <input type="tel" placeholder="Número de celular" />
+
+    <button type="submit">Comprar</button>
+  </form>
+
+</section>

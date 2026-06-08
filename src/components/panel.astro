@@ -1,0 +1,65 @@
+---
+import { ShoppingCartIcon } from "@animateicons/react/lucide";
+import "../styles/panel.css";
+import { Image } from "astro:assets";
+import feastables from "../assets/feastables.webp";
+import triples from "../assets/triples.png";
+import donas from "../assets/donas.jpg";
+import banderillas from "../assets/banderillas.webp";
+---
+
+<section class="panel">
+  <div class="box">
+    <Image src={triples} alt="Product" class="box-image" loading="eager"/>
+    <div class="price-box" data-product="TRIPLES" data-price="1.50">
+        <div class="stock">
+            <span class="stock-label">Stock</span>
+            <span class="stock-value">12</span>
+        </div>
+        <div class="price-container">
+          <span class="price-label">
+            <span class="seller">CHICATEJA</span>
+            <span class="product">TRIPLES</span>
+          </span>
+          <span class="price">PEN 1.50</span>
+        </div>
+        <ShoppingCartIcon className="cart-icon" />
+    </div>
+  </div>
+
+  <div class="box">
+    <Image src={donas} alt="Product" class="box-image" loading="eager"/>
+    <div class="price-box" data-product="DONAS" data-price="3.00">
+        <div class="stock">
+            <span class="stock-label">Stock</span>
+            <span class="stock-value">12</span>
+        </div>
+        <div class="price-container">
+          <span class="price-label">
+            <span class="seller">EL PIBE</span>
+            <span class="product">DONAS</span>
+          </span>
+          <span class="price">PEN 1.50</span>
+        </div>
+        <ShoppingCartIcon className="cart-icon" />
+    </div>
+  </div>
+
+  <div class="box">
+    <Image src={banderillas} alt="Product" class="box-image" loading="eager"/>
+    <div class="price-box" data-product="BANDERILLAS" data-price="4.00">
+        <div class="stock">
+            <span class="stock-label">Stock</span>
+            <span class="stock-value">12</span>
+        </div>
+        <div class="price-container">
+          <span class="price-label">
+            <span class="seller">DELUMI</span>
+            <span class="product">BANDERILLAS</span>
+          </span>
+          <span class="price">PEN 1.50</span>
+        </div>
+        <ShoppingCartIcon className="cart-icon" />
+    </div>
+  </div>
+</section>
