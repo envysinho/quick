@@ -73,6 +73,7 @@ import banderillas from "../assets/banderillas.webp";
 </section>
 
 <script>
+document.addEventListener("DOMContentLoaded", () => {
   const options = document.querySelectorAll(".poll-option");
   const sendButton = document.querySelector(".poll-button");
 
@@ -100,29 +101,35 @@ import banderillas from "../assets/banderillas.webp";
   });
 
   sendButton?.addEventListener("click", async () => {
-    if (selected.length === 0) return;
+    console.log("Click send");
+
+    if (selected.length === 0) {
+      console.log("There's any selection");
+      return;
+    }
 
     try {
       const formData = new FormData();
       formData.append("name", selected.join(", "));
 
-      const res = await fetch(
+      await fetch(
         "https://script.google.com/macros/s/AKfycbyAHWfX7SwQ1ny_LrE8TWKZ95m1FZOXjUXvSzR7EC2dagJMI09_P-fhsl9TFj4fNHQ/exec",
         {
           method: "POST",
-          body: formData
+          body: formData,
+          mode: "no-cors"
         }
       );
 
-      const data = await res.json();
-      console.log("Votos enviados:", data);
+      console.log("Sent to google sheet");
 
-      // reset UI
       selected = [];
       options.forEach((o) => o.classList.remove("active"));
 
     } catch (err) {
-      console.error("Error enviando votos:", err);
+      console.error("Fetch error:", err);
     }
   });
+
+});
 </script>
