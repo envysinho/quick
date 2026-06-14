@@ -5,7 +5,7 @@ import { Image } from "astro:assets";
 import triples from "../assets/triples.png";
 import donas from "../assets/donas.jpg";
 import "../styles/poll.css";
-import banderillas from "../assets/banderillas.webp";
+import pulpitos from "../assets/pulpitos.jpg";
 import CircleCheckIcon from "./CircleCheckIcon";
 ---
 
@@ -29,18 +29,18 @@ import CircleCheckIcon from "./CircleCheckIcon";
   </div>
 
   <div class="box">
-    <Image src={donas} alt="Product" class="box-image" loading="eager"/>
-    <div class="price-box" data-product="Donas" data-price="3.00">
+    <Image src={pulpitos} alt="Product" class="box-image" loading="eager"/>
+    <div class="price-box" data-product="Pulpitos" data-price="1.50">
         <div class="stock">
             <span class="stock-label">Stock</span>
             <span class="stock-value">12</span>
         </div>
         <div class="price-container">
           <span class="price-label">
-            <span class="seller">EL PIBE</span>
-            <span class="product">DONAS</span>
+            <span class="seller">CHICATEJA</span>
+            <span class="product">PULPITOS</span>
           </span>
-          <span class="price">PEN 3.00</span>
+          <span class="price">PEN 1.50</span>
         </div>
         <ShoppingCartIcon className="cart-icon" />
     </div>
