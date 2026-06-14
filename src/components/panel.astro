@@ -131,16 +131,17 @@ import CircleCheckIcon from "./CircleCheckIcon";
       const formData = new FormData();
       formData.append("name", selected.join(", "));
 
-      fetch(
-        "https://script.google.com/macros/s/AKfycbyAHWfX7SwQ1ny_LrE8TWKZ95m1FZOXjUXvSzR7EC2dagJMI09_P-fhsl9TFj4fNHQ/exec",
-        {
-          method: "POST",
-          body: formData,
-          mode: "no-cors"
+      fetch("https://muddy-glade-4d62.2611010122.workers.dev/", {
+        method: "POST",
+        body: formData,
+        headers: {
+          "x-api-key": "poll_9xA7k2z_secure_key"
         }
-      ).then(() => {
-        console.log("Sent to Google Sheets");
-      }).catch((err) => {
+      })
+      .then(() => {
+        console.log("Sent to Worker");
+      })
+      .catch((err) => {
         console.error("Fetch error:", err);
       });
 
