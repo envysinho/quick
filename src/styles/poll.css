@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: -apple-system, BlinkMacSystemFont, "San Francisco", sans-serif;
+  font-family: "SF Pro Text", sans-serif;
 }
 
 .next-week {
