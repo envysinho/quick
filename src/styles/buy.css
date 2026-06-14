@@ -69,6 +69,16 @@
     cursor: pointer;
 }
 
+.buy-form button {
+  transition: transform 0.3s ease, opacity 0.1s ease;
+  will-change: transform;
+}
+
+.buy-form button:active {
+  transform: scale(0.98);
+  opacity: 0.85;
+}
+
 .row {
     display: flex;
     gap: 10px;
