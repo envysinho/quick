@@ -4,6 +4,7 @@ import "../styles/panel.css";
 import { Image } from "astro:assets";
 import triples from "../assets/triples.png";
 import donas from "../assets/donas.jpg";
+import "../styles/poll.css";
 import banderillas from "../assets/banderillas.webp";
 ---
 
@@ -44,21 +45,83 @@ import banderillas from "../assets/banderillas.webp";
     </div>
   </div>
 
-  <div class="box">
-    <Image src={banderillas} alt="Product" class="box-image" loading="eager"/>
-    <div class="price-box" data-product="Banderillas" data-price="4.00">
-        <div class="stock">
-            <span class="stock-label">Stock</span>
-            <span class="stock-value">12</span>
+  <div class="box box--poll">
+    <div class="next-week">
+
+      <h3 class="poll-title">¡Tú eliges la siguiente semana!</h3>
+
+      <div class="poll-grid">
+
+        <div class="poll-column">
+          <button class="poll-option" data-value="Producto 1">Pulpitos crujientes</button>
+          <button class="poll-option" data-value="Producto 2">Bombitas azucaradas</button>
+          <button class="poll-option" data-value="Producto 3">Rollitos de salchicha</button>
+          <button class="poll-option" data-value="Producto 4">Triples</button>
         </div>
-        <div class="price-container">
-          <span class="price-label">
-            <span class="seller">DELUMI</span>
-            <span class="product">BANDERILLAS</span>
-          </span>
-          <span class="price">PEN 4.00</span>
+
+        <div class="poll-column">
+          <button class="poll-option" data-value="Producto 5">Pitipan de pollo</button>
+          <button class="poll-option" data-value="Producto 6">Mini hamburguesas</button>
+          <button class="poll-option" data-value="Producto 7">Chocotejas</button>
+          <button class="poll-button">Enviar respuestas</button>
         </div>
-        <ShoppingCartIcon className="cart-icon" />
+
+      </div>
+
     </div>
   </div>
 </section>
+
+<script>
+  const options = document.querySelectorAll(".poll-option");
+  const sendButton = document.querySelector(".poll-button");
+
+  let selected: string[] = [];
+
+  options.forEach((option) => {
+    const el = option as HTMLElement;
+
+    el.addEventListener("click", () => {
+      const value = el.dataset.value;
+
+      if (!value) return;
+
+      if (selected.includes(value)) {
+        selected = selected.filter((v) => v !== value);
+        el.classList.remove("active");
+        return;
+      }
+
+      if (selected.length >= 2) return;
+
+      selected.push(value);
+      el.classList.add("active");
+    });
+  });
+
+  sendButton?.addEventListener("click", async () => {
+    if (selected.length === 0) return;
+
+    try {
+      const res = await fetch("http://localhost:3001/api/votes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: selected.join(", ")
+        })
+      });
+
+      const data = await res.json();
+      console.log("✅ Votos enviados:", data);
+
+      // reset UI
+      selected = [];
+      options.forEach((o) => o.classList.remove("active"));
+
+    } catch (err) {
+      console.error("❌ Error enviando votos:", err);
+    }
+  });
+</script>
