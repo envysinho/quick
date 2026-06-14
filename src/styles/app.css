@@ -18,3 +18,7 @@
 .slider.to-buy {
     transform: translateX(-100vw);
 }
+
+.slider {
+  touch-action: pan-y; /* permite scroll vertical pero drag horizontal */
+}
