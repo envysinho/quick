@@ -74,7 +74,6 @@ import banderillas from "../assets/banderillas.webp";
 
 <script>
   const options = document.querySelectorAll(".poll-option");
-  const sendButton = document.querySelector(".poll-button");
 
   let selected: string[] = [];
 
@@ -97,31 +96,5 @@ import banderillas from "../assets/banderillas.webp";
       selected.push(value);
       el.classList.add("active");
     });
-  });
-
-  sendButton?.addEventListener("click", async () => {
-    if (selected.length === 0) return;
-
-    try {
-      const res = await fetch("http://localhost:3001/api/votes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          name: selected.join(", ")
-        })
-      });
-
-      const data = await res.json();
-      console.log("✅ Votos enviados:", data);
-
-      // reset UI
-      selected = [];
-      options.forEach((o) => o.classList.remove("active"));
-
-    } catch (err) {
-      console.error("❌ Error enviando votos:", err);
-    }
   });
 </script>
