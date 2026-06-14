@@ -6,6 +6,7 @@ import triples from "../assets/triples.png";
 import donas from "../assets/donas.jpg";
 import "../styles/poll.css";
 import banderillas from "../assets/banderillas.webp";
+import CircleCheckIcon from "./CircleCheckIcon";
 ---
 
 <section class="panel">
@@ -69,67 +70,86 @@ import banderillas from "../assets/banderillas.webp";
       </div>
 
     </div>
+
+    <div class="poll-success hidden">
+      <p>Respuestas enviadas</p>
+      <CircleCheckIcon size={50} className="text-white" client:load />
+    </div>
+    
   </div>
 </section>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const options = document.querySelectorAll(".poll-option");
-  const sendButton = document.querySelector(".poll-button");
+  document.addEventListener("DOMContentLoaded", () => {
+    const options = document.querySelectorAll(".poll-option");
+    const sendButton = document.querySelector(".poll-button");
 
-  let selected: string[] = [];
+    const pollBox = document.querySelector(".next-week") as HTMLElement;
+    const success = document.querySelector(".poll-success") as HTMLElement;
 
-  options.forEach((option) => {
-    const el = option as HTMLElement;
+    if (!pollBox || !success || !sendButton) return;
 
-    el.addEventListener("click", () => {
-      const value = el.dataset.value;
+    let selected: string[] = [];
 
-      if (!value) return;
+    options.forEach((option) => {
+      const el = option as HTMLElement;
 
-      if (selected.includes(value)) {
-        selected = selected.filter((v) => v !== value);
-        el.classList.remove("active");
-        return;
+      el.addEventListener("click", () => {
+        const value = el.dataset.value;
+        if (!value) return;
+
+        if (selected.includes(value)) {
+          selected = selected.filter((v) => v !== value);
+          el.classList.remove("active");
+          return;
+        }
+
+        if (selected.length >= 2) return;
+
+        selected.push(value);
+        el.classList.add("active");
+      });
+    });
+
+    sendButton.addEventListener("click", async () => {
+      console.log("Click send");
+
+      if (selected.length === 0) return;
+
+      try {
+        const formData = new FormData();
+        formData.append("name", selected.join(", "));
+
+        await fetch(
+          "https://script.google.com/macros/s/AKfycbyAHWfX7SwQ1ny_LrE8TWKZ95m1FZOXjUXvSzR7EC2dagJMI09_P-fhsl9TFj4fNHQ/exec",
+          {
+            method: "POST",
+            body: formData,
+            mode: "no-cors"
+          }
+        );
+
+        console.log("Sent to google sheet");
+
+        selected = [];
+        options.forEach((o) => o.classList.remove("active"));
+
+        pollBox.style.transition = "0.4s ease";
+        pollBox.style.opacity = "0";
+        pollBox.style.transform = "translateY(10px)";
+
+        setTimeout(() => {
+          pollBox.classList.add("hidden");
+
+          success.classList.remove("hidden");
+          requestAnimationFrame(() => {
+            success.classList.add("show");
+          });
+        }, 400);
+
+      } catch (err) {
+        console.error("Fetch error:", err);
       }
-
-      if (selected.length >= 2) return;
-
-      selected.push(value);
-      el.classList.add("active");
     });
   });
-
-  sendButton?.addEventListener("click", async () => {
-    console.log("Click send");
-
-    if (selected.length === 0) {
-      console.log("There's any selection");
-      return;
-    }
-
-    try {
-      const formData = new FormData();
-      formData.append("name", selected.join(", "));
-
-      await fetch(
-        "https://script.google.com/macros/s/AKfycbyAHWfX7SwQ1ny_LrE8TWKZ95m1FZOXjUXvSzR7EC2dagJMI09_P-fhsl9TFj4fNHQ/exec",
-        {
-          method: "POST",
-          body: formData,
-          mode: "no-cors"
-        }
-      );
-
-      console.log("Sent to google sheet");
-
-      selected = [];
-      options.forEach((o) => o.classList.remove("active"));
-
-    } catch (err) {
-      console.error("Fetch error:", err);
-    }
-  });
-
-});
 </script>
