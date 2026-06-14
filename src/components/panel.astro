@@ -74,6 +74,7 @@ import banderillas from "../assets/banderillas.webp";
 
 <script>
   const options = document.querySelectorAll(".poll-option");
+  const sendButton = document.querySelector(".poll-button");
 
   let selected: string[] = [];
 
@@ -96,5 +97,32 @@ import banderillas from "../assets/banderillas.webp";
       selected.push(value);
       el.classList.add("active");
     });
+  });
+
+  sendButton?.addEventListener("click", async () => {
+    if (selected.length === 0) return;
+
+    try {
+      const formData = new FormData();
+      formData.append("name", selected.join(", "));
+
+      const res = await fetch(
+        "https://script.google.com/macros/s/AKfycbyAHWfX7SwQ1ny_LrE8TWKZ95m1FZOXjUXvSzR7EC2dagJMI09_P-fhsl9TFj4fNHQ/exec",
+        {
+          method: "POST",
+          body: formData
+        }
+      );
+
+      const data = await res.json();
+      console.log("Votos enviados:", data);
+
+      // reset UI
+      selected = [];
+      options.forEach((o) => o.classList.remove("active"));
+
+    } catch (err) {
+      console.error("Error enviando votos:", err);
+    }
   });
 </script>
