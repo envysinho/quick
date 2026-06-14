@@ -54,6 +54,16 @@ import "../styles/app.css";
 	</script>
 
 	<script>
+	const slider = document.querySelector(".slider");
+
+	document.querySelector(".back-icon")?.addEventListener("click", () => {
+		if (!slider) return;
+
+		slider.classList.remove("to-buy");
+	});
+	</script>
+
+	<script>
   	const bg = document.querySelector(".bg");
 
   	if (bg) {
@@ -155,7 +165,6 @@ import "../styles/app.css";
 					});
 				}
 
-				// Reiniciar adicional
 				if (extraSubtotalInput) {
 					extraSubtotalInput.value = "PEN 0.00";
 				}

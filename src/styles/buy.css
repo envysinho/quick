@@ -6,6 +6,24 @@
     box-sizing: border-box;
 }
 
+.form-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.back-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.back-icon svg {
+  display: block;
+}
+
 .buy-form {
     display: flex;
     flex-direction: column;
@@ -107,8 +125,13 @@
     border-radius: 30px;
   }
 
+  .back-icon svg {
+    width: 30px;
+    height: 30px;
+  }
+
   .buy-form h2 {
-    font-size: 22px;
+    font-size: 30px;
   }
 
   .buy-form input,

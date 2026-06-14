@@ -1,11 +1,16 @@
 ---
 import "../styles/buy.css";
+import CircleChevronLeft from "./CircleChevronLeft";
 ---
 
 <section class="form-section">
 
   <form class="buy-form" id="buy-form">
-    <h2 id="form-title">Finaliza tu pedido</h2>
+
+    <div class="form-header">
+      <CircleChevronLeft size={25} className="back-icon" client:load />
+      <h2 id="form-title">Finaliza tu pedido</h2>
+    </div>
 
     <input type="text" placeholder="Nombre" />
 
