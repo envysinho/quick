@@ -89,6 +89,14 @@ import CircleCheckIcon from "./CircleCheckIcon";
 
     if (!pollBox || !success || !sendButton) return;
 
+    const hasVoted = localStorage.getItem("voted");
+
+    if (hasVoted) {
+      pollBox.classList.add("hidden");
+      success.classList.remove("hidden");
+      return;
+    }
+
     let selected: string[] = [];
 
     options.forEach((option) => {
@@ -131,40 +139,41 @@ import CircleCheckIcon from "./CircleCheckIcon";
       const formData = new FormData();
       formData.append("name", selected.join(", "));
 
-    fetch("https://muddy-glade-4d62.2611010122.workers.dev/", {
-      method: "POST",
-      body: formData,
-      headers: {
-        "x-api-key": "poll_9xA7k2z_secure_key"
-      }
-    })
-    .then(async (res) => {
+      fetch("https://muddy-glade-4d62.2611010122.workers.dev/", {
+        method: "POST",
+        body: formData,
+        headers: {
+          "x-api-key": "poll_9xA7k2z_secure_key"
+        }
+      })
+      .then(async (res) => {
 
-      // ❌ si falla raro (no red / server error)
-      if (!res.ok && res.status !== 403) {
-        throw new Error("Error en Worker");
-      }
+        if (!res.ok && res.status !== 403) {
+          throw new Error("Error en Worker");
+        }
 
-      // ✔ SIEMPRE mostrar éxito (200 o 403)
-      pollBox.classList.add("hidden");
+        pollBox.classList.add("hidden");
+        success.classList.remove("hidden");
 
-      success.classList.remove("hidden");
+        requestAnimationFrame(() => {
+          success.classList.add("show");
+        });
 
-      requestAnimationFrame(() => {
-        success.classList.add("show");
+        localStorage.setItem("voted", "true");
+
+      })
+      .catch((err) => {
+        console.error("Fetch error:", err);
+
+        pollBox.classList.add("hidden");
+        success.classList.remove("hidden");
+
+        localStorage.setItem("voted", "true");
       });
-
-    })
-    .catch((err) => {
-      console.error("Fetch error:", err);
-
-      // opcional: igual mostrar éxito si quieres ultra tolerante
-      pollBox.classList.add("hidden");
-      success.classList.remove("hidden");
-    });
 
       selected = [];
       options.forEach((o) => o.classList.remove("active"));
     });
+
   });
 </script>
