@@ -111,45 +111,41 @@ import CircleCheckIcon from "./CircleCheckIcon";
       });
     });
 
-    sendButton.addEventListener("click", async () => {
-      console.log("Click send");
-
+    sendButton.addEventListener("click", () => {
       if (selected.length === 0) return;
 
-      try {
-        const formData = new FormData();
-        formData.append("name", selected.join(", "));
+      pollBox.style.transition = "0.4s ease";
+      pollBox.style.opacity = "0";
+      pollBox.style.transform = "translateY(10px)";
 
-        await fetch(
-          "https://script.google.com/macros/s/AKfycbyAHWfX7SwQ1ny_LrE8TWKZ95m1FZOXjUXvSzR7EC2dagJMI09_P-fhsl9TFj4fNHQ/exec",
-          {
-            method: "POST",
-            body: formData,
-            mode: "no-cors"
-          }
-        );
+      setTimeout(() => {
+        pollBox.classList.add("hidden");
 
-        console.log("Sent to google sheet");
+        success.classList.remove("hidden");
 
-        selected = [];
-        options.forEach((o) => o.classList.remove("active"));
+        requestAnimationFrame(() => {
+          success.classList.add("show");
+        });
+      }, 150);
 
-        pollBox.style.transition = "0.4s ease";
-        pollBox.style.opacity = "0";
-        pollBox.style.transform = "translateY(10px)";
+      const formData = new FormData();
+      formData.append("name", selected.join(", "));
 
-        setTimeout(() => {
-          pollBox.classList.add("hidden");
-
-          success.classList.remove("hidden");
-          requestAnimationFrame(() => {
-            success.classList.add("show");
-          });
-        }, 400);
-
-      } catch (err) {
+      fetch(
+        "https://script.google.com/macros/s/AKfycbyAHWfX7SwQ1ny_LrE8TWKZ95m1FZOXjUXvSzR7EC2dagJMI09_P-fhsl9TFj4fNHQ/exec",
+        {
+          method: "POST",
+          body: formData,
+          mode: "no-cors"
+        }
+      ).then(() => {
+        console.log("Sent to Google Sheets");
+      }).catch((err) => {
         console.error("Fetch error:", err);
-      }
+      });
+
+      selected = [];
+      options.forEach((o) => o.classList.remove("active"));
     });
   });
 </script>
