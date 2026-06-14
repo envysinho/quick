@@ -67,11 +67,53 @@ import "../styles/app.css";
 		const priceBoxes = document.querySelectorAll(".price-box") as NodeListOf<HTMLElement>;
 
 		const formTitle = document.getElementById("form-title");
-		const quantityInput = document.getElementById("quantity") as HTMLInputElement;
-		const totalInput = document.getElementById("total") as HTMLInputElement;
 
-		if (!formTitle || !quantityInput || !totalInput) {
-  			throw new Error("Missing elements in DOM");
+		const selectedProductInput =
+			document.getElementById("selected-product") as HTMLInputElement;
+
+		const productPriceInput =
+			document.getElementById("product-price") as HTMLInputElement;
+
+		const quantityInput =
+			document.getElementById("quantity") as HTMLInputElement;
+
+		const totalInput =
+			document.getElementById("total") as HTMLInputElement;
+
+		const extraProductSelect =
+			document.getElementById("extra-product") as HTMLSelectElement;
+
+		const extraSubtotalInput =
+			document.getElementById("extra-subtotal") as HTMLInputElement;
+
+		const extraQuantityInput =
+			document.getElementById("extra-quantity") as HTMLInputElement;
+
+		if (
+			!formTitle ||
+			!quantityInput ||
+			!totalInput ||
+			!selectedProductInput ||
+			!productPriceInput
+		) {
+			throw new Error("Missing elements in DOM");
+		}
+
+		if (extraProductSelect) {
+			priceBoxes.forEach(box => {
+				const name = box.dataset.product;
+				const price = box.dataset.price;
+
+				if (!name) return;
+
+				const option = document.createElement("option");
+
+				option.value = name;
+				option.textContent = name;
+				option.dataset.price = price || "0";
+
+				extraProductSelect.appendChild(option);
+			});
 		}
 
 		window.selectedProduct = {
@@ -86,25 +128,84 @@ import "../styles/app.css";
 
 				window.selectedProduct = { name, price };
 
-        formTitle.textContent = "Comprando " + `${name}`;
+				formTitle.textContent = "Comprando " + name;
+
+				selectedProductInput.value = name;
 
 				quantityInput.value = "1";
+
+
+				if (extraProductSelect) {
+					extraProductSelect.innerHTML =
+						'<option value="" selected>Extra</option>';
+
+					priceBoxes.forEach(otherBox => {
+						const otherName = otherBox.dataset.product;
+						const otherPrice = otherBox.dataset.price;
+
+						if (!otherName || otherName === name) return;
+
+						const option = document.createElement("option");
+
+						option.value = otherName;
+						option.textContent = otherName;
+						option.dataset.price = otherPrice || "0";
+
+						extraProductSelect.appendChild(option);
+					});
+				}
+
+				// Reiniciar adicional
+				if (extraSubtotalInput) {
+					extraSubtotalInput.value = "PEN 0.00";
+				}
+
+				if (extraQuantityInput) {
+					extraQuantityInput.value = "1";
+				}
 
 				updateTotal();
 			});
 		});
 
 		function updateTotal() {
-		const qty = parseInt(quantityInput.value || "1");
+			const qty = parseInt(quantityInput.value || "1");
 
-		const product = window.selectedProduct;
+			const product = window.selectedProduct;
 
-		const total = (qty * product.price).toFixed(2);
+			const mainSubtotal = qty * product.price;
 
-		totalInput.value = `PEN ${total}`;
+			if (productPriceInput) {
+				productPriceInput.value = `PEN ${mainSubtotal.toFixed(2)}`;
+			}
+
+			let extraSubtotal = 0;
+
+			if (extraProductSelect && extraProductSelect.value !== "") {
+				const selectedOption =
+					extraProductSelect.options[extraProductSelect.selectedIndex];
+
+				const extraPrice =
+					parseFloat(selectedOption.dataset.price || "0");
+
+				const extraQty =
+					parseInt(extraQuantityInput?.value || "1");
+
+				extraSubtotal = extraPrice * extraQty;
+			}
+
+			if (extraSubtotalInput) {
+				extraSubtotalInput.value = `PEN ${extraSubtotal.toFixed(2)}`;
+			}
+
+			const total = mainSubtotal + extraSubtotal;
+
+			totalInput.value = `PEN ${total.toFixed(2)}`;
 		}
 
 		quantityInput.addEventListener("input", updateTotal);
+		extraProductSelect?.addEventListener("change", updateTotal);
+		extraQuantityInput?.addEventListener("input", updateTotal);
 	</script>
 
 	<script>
@@ -128,8 +229,8 @@ import "../styles/app.css";
     			}
 
 				const nameInput = form.querySelector('input[type="text"]') as HTMLInputElement;
-				const locationSelect = form.querySelectorAll("select")[0] as HTMLSelectElement;
-				const paymentSelect = form.querySelectorAll("select")[1] as HTMLSelectElement;
+				const locationSelect = document.getElementById("location") as HTMLSelectElement;
+				const paymentSelect = document.getElementById("payment") as HTMLSelectElement;
 				const phoneInput = form.querySelector('input[type="tel"]') as HTMLInputElement;
 
 				const name = nameInput.value;
@@ -138,18 +239,45 @@ import "../styles/app.css";
 				const phone = phoneInput.value;
 				const payment = paymentSelect.value;
 
-				const total = (selectedProduct.price * quantity).toFixed(2);
+				const extraProductSelect =
+					document.getElementById("extra-product") as HTMLSelectElement;
+
+				const extraQuantityInput =
+					document.getElementById("extra-quantity") as HTMLInputElement;
+
+				let extraSubtotal = 0;
+				let extraProductInfo = "";
+
+				if (extraProductSelect && extraProductSelect.value !== "") {
+					const selectedOption =
+						extraProductSelect.options[extraProductSelect.selectedIndex];
+
+					const extraPrice =
+						parseFloat(selectedOption.dataset.price || "0");
+
+					const extraQty =
+						parseInt(extraQuantityInput?.value || "1");
+
+					extraSubtotal = extraPrice * extraQty;
+
+					extraProductInfo = `Producto adicional: ${extraProductSelect.value}
+Cantidad adicional: ${extraQty}`;
+				}
+
+				const total = (
+					(selectedProduct.price * quantity) + extraSubtotal
+				).toFixed(2);
 
 				const message = `
 Nuevo pedido:
 Producto: ${selectedProduct.name}
 Cantidad: ${quantity}
+${extraProductInfo}
 Total: PEN ${total}
 Ubicación: ${location}
 Pago: ${payment}
 Cliente: ${name}
-Celular: ${phone}
-				`;
+Celular: ${phone}`;
 
     			const url = `https://wa.me/51907813648?text=${encodeURIComponent(message)}`;
 

@@ -9,7 +9,7 @@ import "../styles/buy.css";
 
     <input type="text" placeholder="Nombre" />
 
-    <select required>
+    <select id="location" required>
       <option value="" disabled selected>Selecciona tu ubicación</option>
       <option>Aula 1</option>
       <option>Aula 2</option>
@@ -25,9 +25,22 @@ import "../styles/buy.css";
       <option>Laboratorio 4</option>
     </select>
 
-    <input type="number" id="quantity" placeholder="Ingresa una cantidad" value="1" min="1" />
+    <div class="row">
+      <input type="text" id="selected-product" value="Producto" disabled/>
+      <input type="number" id="quantity" value="1" min="1"/>
+      <input type="text" id="product-price" value="PEN 0.00" disabled/>
+    </div>
 
-    <select required>
+    <div class="row">
+      <select id="extra-product">
+        <option value="" selected>Extra</option>
+      </select>
+
+      <input type="number" id="extra-quantity" value="1" min="1"/>
+      <input type="text" id="extra-subtotal" value="PEN 0.00" disabled/>
+    </div>
+
+    <select id="payment" required>
       <option value="" disabled selected>Método de pago</option>
       <option>Yape</option>
       <option>Efectivo</option>
