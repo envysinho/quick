@@ -101,3 +101,54 @@
 .hidden {
   display: none;
 }
+
+@media (min-width: 1024px) {
+
+  .box--poll {
+    padding: 10px;
+  }
+
+  .next-week {
+    padding: 20px;
+  }
+
+  .poll-title {
+    font-size: 18px;
+    margin-bottom: 18px;
+  }
+
+  .poll-grid {
+    gap: 16px;
+  }
+
+  .poll-column {
+    gap: 10px;
+    font-size: 14px;
+  }
+
+  .poll-option {
+    font-size: 13px;
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .poll-button {
+    font-size: 14px;
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .poll-success {
+    font-size: 22px;
+    gap: 14px;
+  }
+
+  .poll-option {
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+
+  .poll-option:hover {
+    background: #ffffff;
+    color: #141428;
+  }
+}

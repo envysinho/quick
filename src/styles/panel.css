@@ -42,6 +42,17 @@
     padding: 0 12px;
     z-index: 2;
     font-family: -apple-system, BlinkMacSystemFont, "San Francisco", sans-serif;
+    cursor: pointer;
+}
+
+.price-box {
+  transition: transform 0.3s ease, opacity 0.1s ease;
+  will-change: transform;
+}
+
+.price-box:active {
+  transform: scale(0.97);
+  opacity: 1;
 }
 
 .stock {
@@ -102,4 +113,47 @@
     width: 28px;
     height: 28px;
     color: white;
+}
+
+@media (min-width: 1024px) {
+
+  .panel {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 24px;
+    padding: 20px;
+  }
+
+  .box {
+    width: 30%;
+    height: 320px;
+    margin: 0;
+    border-radius: 30px;
+  }
+
+  .price-box {
+    height: 70px;
+    padding: 0 16px;
+  }
+
+  .price {
+    font-size: 1.8rem;
+  }
+
+  .stock-value {
+    font-size: 1.4rem;
+  }
+
+  .box-image {
+    object-position: 50% 50%;
+  }
+
+  .box {
+    transition: transform 0.3s ease;
+  }
+
+  .box:hover {
+    transform: scale(1.01);
+  }
 }

@@ -83,3 +83,43 @@
 .row select {
     flex: 1;
 }
+
+@media (min-width: 1024px) {
+
+  .form-section {
+    padding: 30px;
+  }
+
+  .buy-form {
+    max-width: 520px;
+    padding: 28px;
+    gap: 16px;
+    border-radius: 30px;
+  }
+
+  .buy-form h2 {
+    font-size: 22px;
+  }
+
+  .buy-form input,
+  .buy-form select {
+    font-size: 15px;
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .buy-form button {
+    font-size: 15px;
+    padding: 14px;
+    border-radius: 12px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .buy-form button:hover {
+    transform: translateY(-2px);
+  }
+
+  .row {
+    gap: 14px;
+  }
+}
