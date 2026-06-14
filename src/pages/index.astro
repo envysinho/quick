@@ -40,86 +40,99 @@ import "../styles/app.css";
 		</div>
 	</body>
 
-	<script>
-	const slider = document.querySelector(".slider") as HTMLElement | null;
-	const priceBoxes = document.querySelectorAll(".price-box");
+<script>
+  const slider = document.querySelector(".slider") as HTMLElement | null;
+  const priceBoxes = document.querySelectorAll(".price-box");
 
-	let startX = 0;
-	let currentX = 0;
-	let isDragging = false;
-	let baseTranslate = 0;
+  let startX = 0;
+  let currentX = 0;
+  let isDragging = false;
+  let baseTranslate = 0;
 
-	const threshold = window.innerWidth * 0.2;
+  const threshold = window.innerWidth * 0.2;
 
-	if (slider) {
-		priceBoxes.forEach(box => {
-		box.addEventListener("click", () => {
-			slider.classList.add("to-buy");
-		});
-		});
-	}
+  // -------------------------
+  // CLICK → activa BUY
+  // -------------------------
+  if (slider) {
+    priceBoxes.forEach(box => {
+      box.addEventListener("click", () => {
+        slider.classList.add("to-buy");
+      });
+    });
+  }
 
-	if (slider) {
-		slider.addEventListener("touchstart", start);
-		slider.addEventListener("touchmove", move);
-		slider.addEventListener("touchend", end);
+  // -------------------------
+  // EVENTS
+  // -------------------------
+  if (slider) {
+    slider.addEventListener("touchstart", start);
+    slider.addEventListener("touchmove", move);
+    slider.addEventListener("touchend", end);
 
-		slider.addEventListener("mousedown", start);
-		slider.addEventListener("mousemove", move);
-		slider.addEventListener("mouseup", end);
-		slider.addEventListener("mouseleave", end);
-	}
+    slider.addEventListener("mousedown", start);
+    slider.addEventListener("mousemove", move);
+    slider.addEventListener("mouseup", end);
+    slider.addEventListener("mouseleave", end);
+  }
 
-	function getX(e: MouseEvent | TouchEvent) {
-		return "touches" in e
-		? e.touches[0].clientX
-		: e.clientX;
-	}
+  function getX(e: MouseEvent | TouchEvent) {
+    return "touches" in e
+      ? e.touches[0].clientX
+      : e.clientX;
+  }
 
-	function start(e: MouseEvent | TouchEvent) {
-	if (!slider) return;
+  function start(e: MouseEvent | TouchEvent) {
+    if (!slider) return;
 
-	isDragging = true;
-	startX = getX(e);
+    isDragging = true;
+    startX = getX(e);
 
-	baseTranslate = slider.classList.contains("to-buy")
-		? -window.innerWidth
-		: 0;
+    // 🔥 CLAVE: leer estado REAL del DOM (no asumir)
+    const matrix = window.getComputedStyle(slider).transform;
 
-	slider.style.transition = "none";
-	}
+    if (matrix && matrix !== "none") {
+      const values = matrix.match(/matrix.*\((.+)\)/);
+      if (values) {
+        const parts = values[1].split(", ");
+        baseTranslate = parseFloat(parts[4]); // translateX actual
+      }
+    } else {
+      baseTranslate = 0;
+    }
 
-	function move(e: MouseEvent | TouchEvent) {
-	if (!isDragging || !slider) return;
+    slider.style.transition = "none";
+  }
 
-	currentX = getX(e);
-	const diff = currentX - startX;
+  function move(e: MouseEvent | TouchEvent) {
+    if (!isDragging || !slider) return;
 
-	slider.style.transform = `translateX(${baseTranslate + diff}px)`;
-	}
+    currentX = getX(e);
+    const diff = currentX - startX;
 
-	function end() {
-	if (!isDragging || !slider) return;
+    slider.style.transform = `translateX(${baseTranslate + diff}px)`;
+  }
 
-	isDragging = false;
-	slider.style.transition = "transform 0.3s ease";
+  function end() {
+    if (!isDragging || !slider) return;
 
-	const diff = currentX - startX;
-	const total = baseTranslate + diff;
+    isDragging = false;
+    slider.style.transition = "transform 0.3s ease";
 
-	const limit = -window.innerWidth * 0.3;
+    const diff = currentX - startX;
+    const total = baseTranslate + diff;
 
-	if (total < limit) {
-		slider.classList.add("to-buy");
-	}
+    const limit = -window.innerWidth * 0.3;
 
-	else {
-		slider.classList.remove("to-buy");
-	}
+    if (total < limit) {
+      slider.classList.add("to-buy");
+    } else {
+      slider.classList.remove("to-buy");
+    }
 
-	slider.style.transform = "";
-	}
-	</script>
+    slider.style.transform = "";
+  }
+</script>
 
 	<script>
 		const priceBoxes = document.querySelectorAll(".price-box") as NodeListOf<HTMLElement>;
